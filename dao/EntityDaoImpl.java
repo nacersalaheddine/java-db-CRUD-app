@@ -20,13 +20,15 @@ public class EntityDaoImpl implements DaoInterface<Entity>{
 
     public static String DATABASE_NAME = "entities_application";
     public static String TABLE_NAME = "entities";
-    public static String SELECT_QUERY = "SELECT * FROM "+DATABASE_NAME+"."+TABLE_NAME+";";
-    public static String SELECT_BY_ID_QUERY = "SELECT * FROM "+DATABASE_NAME+"."+TABLE_NAME+" WHERE id=";
-    public static String INSERT_QUERY = "INSERT INTO "+DATABASE_NAME+"."+TABLE_NAME
-    + " (name, email) VALUES (?,?);";
-    public static String DELETE_RECORD_QUERY = "DELETE FROM "+DATABASE_NAME+"."+TABLE_NAME+" WHERE id=?;";
+   //public static String SELECT_QUERY = "SELECT * FROM "+DATABASE_NAME+"."+TABLE_NAME+";";
+    public static String SELECT_QUERY = "SELECT * FROM "+TABLE_NAME+";";
 
-    public static String UPDATE_DATA_QUERY = "UPDATE "+DATABASE_NAME+"."+TABLE_NAME+" SET name = ?, email = ? WHERE id =?;";
+    public static String SELECT_BY_ID_QUERY = "SELECT * FROM "+TABLE_NAME+" WHERE id=";
+    public static String INSERT_QUERY = "INSERT INTO "+TABLE_NAME
+    + " (name, email) VALUES (?,?);";
+
+    public static String DELETE_RECORD_QUERY = "DELETE FROM "+TABLE_NAME+" WHERE id=?;";
+    public static String UPDATE_DATA_QUERY = "UPDATE "+TABLE_NAME+" SET name = ?, email = ? WHERE id =?;";
         
     public EntityDaoImpl(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
@@ -179,7 +181,7 @@ public class EntityDaoImpl implements DaoInterface<Entity>{
         }
     }
     // You need to close the resultSet
-    private void close() {
+    public void close() {
         try {
             if (this.resultSet != null) {
                 this.resultSet.close();
@@ -193,7 +195,7 @@ public class EntityDaoImpl implements DaoInterface<Entity>{
                 this.conx.close();
             }
         } catch (Exception e) {
-
+            System.err.println("Error closing "+e);
         }
     }
 }

@@ -1,6 +1,7 @@
 CREATE DATABASE entities_application;
 USE entities_application;
-CREATE TABLE entities(id INT NOT NULL PRIMARY KEY,name VARCHAR(255) NOT NULL,
+CREATE TABLE entities(id INT NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL);
 
 ALTER TABLE entities MODIFY COLUMN id INT auto_increment;

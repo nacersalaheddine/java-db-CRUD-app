@@ -17,4 +17,5 @@ public interface DaoInterface<T>{
     
     void delete(long t);
 
+    public void close();
 }

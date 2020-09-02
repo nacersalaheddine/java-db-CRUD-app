@@ -11,7 +11,7 @@ import beans.Entity;
 
 public class DAOFactory {
 
-    private static final String PROPERTIES_FILE       = "dao/dao.properties";
+    private static final String PROPERTIES_FILE       = "dao/dao_sqlite.properties";
     private static final String PROPERTY_URL             = "url";
     private static final String PROPERTY_DRIVER          = "driver";
     private static final String PROPERTY_USERNAME        = "username";
@@ -20,7 +20,9 @@ public class DAOFactory {
     private String url;
     private String username;
     private String password;
-
+    DAOFactory( String url) {
+        this.url = url;
+    }
     DAOFactory( String url, String username, String password ) {
         this.url = url;
         this.username = username;
@@ -29,7 +31,7 @@ public class DAOFactory {
 
     /*
      * 
-     * Responsible method for loading connection details for the database
+     *  Method responsible for loading connection details for the database
      * 
      */
     public static DAOFactory getInstance() throws Exception{
@@ -38,41 +40,43 @@ public class DAOFactory {
         String driver;
         String username;
         String password;
-
+        DAOFactory instance;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream fichierProperties = classLoader.getResourceAsStream( PROPERTIES_FILE );
+        InputStream peropertiesFile = classLoader.getResourceAsStream( PROPERTIES_FILE );
 
-        if ( fichierProperties == null ) {
+        if ( peropertiesFile == null ) {
            System.err.println("Can't find the properties\"" + PROPERTIES_FILE + "\" file.");
         }
 
         try {
-            properties.load( fichierProperties );
+            properties.load( peropertiesFile );
             url = properties.getProperty( PROPERTY_URL );
             driver = properties.getProperty( PROPERTY_DRIVER );
             username = properties.getProperty( PROPERTY_USERNAME );
             password = properties.getProperty( PROPERTY_PASSWORD );
-            System.out.println(url);
-            System.out.println(driver);
-            System.out.println(username);
-            System.out.println(password);
         } catch ( IOException e ) {
-            System.err.println( "Impossible de charger le fichier properties " + PROPERTIES_FILE+ e );
+            System.err.println( "Error loading the properties file " + PROPERTIES_FILE+ e );
             throw e;
         }
+       
 
         try {
             Class.forName( driver );
         } catch ( ClassNotFoundException e ) {
-            System.err.println( "Le driver est introuvable dans le classpath."+ e );
+            System.err.println( "Cant find the driver in classpath."+ e );
             throw e;
         }
 
-        DAOFactory instance = new DAOFactory( url, username, password );
+        if (PROPERTIES_FILE.equals("dao_mysql.properties")){
+             instance = new DAOFactory( url, username, password );
+        }else{
+             instance = new DAOFactory(url);
+        }
+
         return instance;
     }
 
-    /* Méthode chargée de fournir une connexion à la base de données */
+    /* Create connection to database */
      /* package */ 
      Connection getConnection() throws SQLException {
 
@@ -80,8 +84,7 @@ public class DAOFactory {
     }
 
     /*
-     * Méthodes de récupération de l'implémentation des différents DAO (un seul
-     * pour le moment)
+     * Dao connector
      */
     public DaoInterface<Entity> getEntityDao() {
         return new EntityDaoImpl(this);

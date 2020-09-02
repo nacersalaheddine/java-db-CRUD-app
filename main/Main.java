@@ -12,14 +12,15 @@ public class Main {
         
         entityDaoImpl = DAOFactory.getInstance().getEntityDao();
        // entityDaoImpl.showAll();
-       // entityDaoImpl.create(new Entity("John", "john@domain.com"));
-       // entityDaoImpl.showAll();
-        Entity entity = getUser(50);
+        entityDaoImpl.create(new Entity("John", "john@domain.com"));
+        entityDaoImpl.showAll();
+        Entity entity = getUser(1);
         System.out.println(entity.getName());
         System.out.println(entity.getEmail());
-        //entityDaoImpl.delete(2);
-        entityDaoImpl.update(50, new String[]{"blaky", "black@domain.com"});
+        //entityDaoImpl.delete(1);
+        //entityDaoImpl.update(1, new String[]{"blaky", "black@domain.com"});
 
+        entityDaoImpl.close();
     }
   
     private static Entity getUser(long id) {
